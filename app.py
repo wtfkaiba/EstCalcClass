@@ -95,7 +95,7 @@ st.markdown("---")
 st.sidebar.header("Insira os Dados da Distribuição:")
 lim_inf_primeira = st.sidebar.number_input("Limite Inferior da 1ª Classe:", value=1, step=1)
 amplitude = st.sidebar.number_input("Amplitude de Classe (h):", value=3, min_value=1, step=1)
-qtd_classes = st.sidebar.selectbox("Quantidade de Classes (ímpar):", options=[3, 5, 7], index=1) # Padrão 5
+qtd_classes = st.sidebar.selectbox("Quantidade de Classes:", options=[3, 5, 7], index=1) # Padrão 5
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("Frequências Absolutas (fi) de cada Classe:")
