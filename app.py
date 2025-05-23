@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 
+from calculator import calcular_estatisticas
+
 # --- Color Palette for Dark Theme ---
 DARK_BACKGROUND_COLOR = '#1e2A38' # Slightly different from pure #222730 for variety
 PLOT_BACKGROUND_COLOR = '#283442' # A bit lighter for the plot area itself
@@ -144,15 +146,15 @@ if st.sidebar.button("Calcular Estatísticas", type="primary", use_container_wid
                 
                 if qtd_classes == 5: # Para replicar o visual da imagem com 5 classes
                     # Banda 1 (leve)
-                    shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[0], x1=df_resultados['Limite Superior (LS)'].iloc[0], y0=0, y1=1, fillcolor=SHAPE_COLOR_LIGHT, layer="below", line_width=0))
+                    shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[0], x1=df_resultados['Limite Superior (LS)'].iloc[0], y0=0, y1=1, fillcolor=SHAPE_COLOR_DARKER, layer="below", line_width=0))
                     # Banda 2 (mais escura, cobre 2 classes)
                     shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[1], x1=df_resultados['Limite Superior (LS)'].iloc[2], y0=0, y1=1, fillcolor=SHAPE_COLOR_DARKER, layer="below", line_width=0))
                     # Banda 3 (leve, cobre 2 classes)
-                    shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[3], x1=df_resultados['Limite Superior (LS)'].iloc[4], y0=0, y1=1, fillcolor=SHAPE_COLOR_LIGHT, layer="below", line_width=0))
+                    shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[3], x1=df_resultados['Limite Superior (LS)'].iloc[4], y0=0, y1=1, fillcolor=SHAPE_COLOR_DARKER, layer="below", line_width=0))
                 elif qtd_classes == 3:
-                     shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[0], x1=df_resultados['Limite Superior (LS)'].iloc[0], y0=0, y1=1, fillcolor=SHAPE_COLOR_LIGHT, layer="below", line_width=0))
+                     shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[0], x1=df_resultados['Limite Superior (LS)'].iloc[0], y0=0, y1=1, fillcolor=SHAPE_COLOR_DARKER, layer="below", line_width=0))
                      shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[1], x1=df_resultados['Limite Superior (LS)'].iloc[1], y0=0, y1=1, fillcolor=SHAPE_COLOR_DARKER, layer="below", line_width=0))
-                     shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[2], x1=df_resultados['Limite Superior (LS)'].iloc[2], y0=0, y1=1, fillcolor=SHAPE_COLOR_LIGHT, layer="below", line_width=0))
+                     shapes.append(go.layout.Shape(type="rect", xref="x", yref="paper", x0=df_resultados['Limite Inferior (LI)'].iloc[2], x1=df_resultados['Limite Superior (LS)'].iloc[2], y0=0, y1=1, fillcolor=SHAPE_COLOR_DARKER, layer="below", line_width=0))
                 # Adicionar mais lógica para qtd_classes == 7 se necessário para as bandas
 
                 fig_hist.update_layout(
@@ -186,7 +188,7 @@ if st.sidebar.button("Calcular Estatísticas", type="primary", use_container_wid
                 fig_ogiva.update_layout(
                     plot_bgcolor=PLOT_BACKGROUND_COLOR, paper_bgcolor=PLOT_BACKGROUND_COLOR,
                     font=dict(color=TEXT_COLOR_DARK_THEME, family='sans-serif'),
-                    xaxis_title='Limites das Classes', yaxis_title='Frequência Acumulada (Fac)',
+                    xaxis_title='Limites das Classes', yaxis_title='Frequência Acumulada Absoluta (Fac)',
                     xaxis=dict(tickvals=x_ogiva, ticktext=[f"{val:.2f}" for val in x_ogiva], showgrid=True, gridcolor=GRID_COLOR_DARK_THEME, zeroline=False, linecolor=GRID_COLOR_DARK_THEME, tickcolor=TEXT_COLOR_DARK_THEME),
                     yaxis=dict(showgrid=True, gridcolor=GRID_COLOR_DARK_THEME, zeroline=True, zerolinecolor=GRID_COLOR_DARK_THEME, dtick=max(1, int(np.ceil(soma_frequencias / 10))), linecolor=GRID_COLOR_DARK_THEME, tickcolor=TEXT_COLOR_DARK_THEME),
                     hoverlabel=dict(bgcolor=HOVER_BG_COLOR_HISTOGRAM, font_size=14, font_family="sans-serif", font_color=TEXT_COLOR_DARK_THEME, bordercolor=HOVER_BG_COLOR_HISTOGRAM),
