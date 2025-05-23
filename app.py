@@ -112,20 +112,20 @@ if st.sidebar.button("Calcular Estatísticas", type="primary", use_container_wid
 
         with tab_tabela_metricas:
             st.subheader("Tabela de Distribuição de Frequência:")
-            st.dataframe(df_resultados.style.format("{:.1f}", subset=pd.IndexSlice[:, ['Limite Inferior (LI)', 'Limite Superior (LS)', 'Ponto Médio de Classe (xi)']]))
+            st.dataframe(df_resultados.style.format("{:.2f}", subset=pd.IndexSlice[:, ['Limite Inferior (LI)', 'Limite Superior (LS)', 'Ponto Médio de Classe (xi)']]))
             st.subheader("Resultados Estatísticos Calculados:")
             if soma_frequencias == 0: st.warning("⚠️ A soma das frequências é zero. As estatísticas podem não ser significativas ou foram definidas como 'N/A'.")
             cols = st.columns(3)
             for i, (nome, valor) in enumerate(estatisticas_data.items()):
                 with cols[i % 3]:
-                    st.metric(label=nome, value=f"{valor:.1f}" if isinstance(valor, (int, float)) and not np.isnan(valor) else "N/A")
+                    st.metric(label=nome, value=f"{valor:.2f}" if isinstance(valor, (int, float)) and not np.isnan(valor) else "N/A")
         
         with tab_graficos:
             st.markdown(f"<h2 style='text-align: center; color: {TEXT_COLOR_DARK_THEME}; font-family: sans-serif; margin-bottom: 0px;'>Gráficos</h2>", unsafe_allow_html=True)
             if soma_frequencias == 0: st.info("Gráficos não podem ser gerados pois a soma total das frequências é zero.")
             else:
                 # --- HISTOGRAMA ---
-                class_labels_xaxis = [f"{int(row['Limite Inferior (LI)']) if row['Limite Inferior (LI)'].is_integer() else row['Limite Inferior (LI)']:.1f} - {int(row['Limite Superior (LS)']) if row['Limite Superior (LS)'].is_integer() else row['Limite Superior (LS)']:.1f}" for _, row in df_resultados.iterrows()]
+                class_labels_xaxis = [f"{int(row['Limite Inferior (LI)']) if row['Limite Inferior (LI)'].is_integer() else row['Limite Inferior (LI)']:.2f} - {int(row['Limite Superior (LS)']) if row['Limite Superior (LS)'].is_integer() else row['Limite Superior (LS)']:.2f}" for _, row in df_resultados.iterrows()]
                 hover_texts_hist = [f"<b>Classe:</b> {class_labels_xaxis[i]}<br><b>Frequência (fi):</b> {df_resultados['Frequência Absoluta (fi)'].iloc[i]}" for i in range(len(class_labels_xaxis))]
                 
                 fig_hist = go.Figure()
@@ -175,8 +175,8 @@ if st.sidebar.button("Calcular Estatísticas", type="primary", use_container_wid
                 st.markdown(f"<h4 style='text-align: center; color: {TEXT_COLOR_DARK_THEME}; font-family: sans-serif;'>Ogiva de Frequências Acumuladas</h4>", unsafe_allow_html=True)
                 x_ogiva = [df_resultados['Limite Inferior (LI)'].iloc[0]] + df_resultados['Limite Superior (LS)'].tolist()
                 y_ogiva = [0] + df_resultados['Frequência Acumulada (Fac)'].tolist()
-                hover_texts_ogiva = [f"<b>Limite:</b> {x_ogiva[0]:.1f}<br><b>Freq. Acum.:</b> 0"] + \
-                                    [f"<b>Limite Sup.:</b> {x_ogiva[i]:.1f}<br><b>Freq. Acum.:</b> {y_ogiva[i]}" for i in range(1, len(x_ogiva))]
+                hover_texts_ogiva = [f"<b>Limite:</b> {x_ogiva[0]:.2f}<br><b>Freq. Acum.:</b> 0"] + \
+                                    [f"<b>Limite Sup.:</b> {x_ogiva[i]:.2f}<br><b>Freq. Acum.:</b> {y_ogiva[i]}" for i in range(1, len(x_ogiva))]
                 fig_ogiva = go.Figure(data=[go.Scatter(
                     x=x_ogiva, y=y_ogiva, mode='lines+markers',
                     marker=dict(color=BAR_COLOR_HISTOGRAM, size=9, line=dict(color=TEXT_COLOR_DARK_THEME, width=1)), # Usar cor da barra do histograma para consistência
@@ -187,7 +187,7 @@ if st.sidebar.button("Calcular Estatísticas", type="primary", use_container_wid
                     plot_bgcolor=PLOT_BACKGROUND_COLOR, paper_bgcolor=PLOT_BACKGROUND_COLOR,
                     font=dict(color=TEXT_COLOR_DARK_THEME, family='sans-serif'),
                     xaxis_title='Limites das Classes', yaxis_title='Frequência Acumulada (Fac)',
-                    xaxis=dict(tickvals=x_ogiva, ticktext=[f"{val:.1f}" for val in x_ogiva], showgrid=True, gridcolor=GRID_COLOR_DARK_THEME, zeroline=False, linecolor=GRID_COLOR_DARK_THEME, tickcolor=TEXT_COLOR_DARK_THEME),
+                    xaxis=dict(tickvals=x_ogiva, ticktext=[f"{val:.2f}" for val in x_ogiva], showgrid=True, gridcolor=GRID_COLOR_DARK_THEME, zeroline=False, linecolor=GRID_COLOR_DARK_THEME, tickcolor=TEXT_COLOR_DARK_THEME),
                     yaxis=dict(showgrid=True, gridcolor=GRID_COLOR_DARK_THEME, zeroline=True, zerolinecolor=GRID_COLOR_DARK_THEME, dtick=max(1, int(np.ceil(soma_frequencias / 10))), linecolor=GRID_COLOR_DARK_THEME, tickcolor=TEXT_COLOR_DARK_THEME),
                     hoverlabel=dict(bgcolor=HOVER_BG_COLOR_HISTOGRAM, font_size=14, font_family="sans-serif", font_color=TEXT_COLOR_DARK_THEME, bordercolor=HOVER_BG_COLOR_HISTOGRAM),
                     showlegend=False, margin=dict(l=50, r=20, t=40, b=50)
