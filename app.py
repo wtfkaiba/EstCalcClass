@@ -160,6 +160,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 st.title("📊 Calculadora de Estatística para Dados Agrupados em Classes")
+st.subheader("Estatística Aplicada - Prof. Eng. MSc. João Carlos dos Santos")
 st.markdown("---")
 
 st.sidebar.header("Insira os Dados da Distribuição:")
