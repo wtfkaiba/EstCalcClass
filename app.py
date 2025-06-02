@@ -38,7 +38,7 @@ def calcular_estatisticas(lim_inf_primeira, amplitude, qtd_classes, frequencias)
         'Ponto Médio (xi)': classes_ponto_medio, 
         'Frequência Absoluta (fi)': frequencias
     })
-    df['Frequência Acumulada (Fi)'] = df['Frequência Absoluta (fi)'].astype(float).cumsum() # Assegurar float para cumsum
+    df['Frequência Acumulada (Fac)'] = df['Frequência Absoluta (fi)'].cumsum() # Assegurar float para cumsum
 
     N = df['Frequência Absoluta (fi)'].sum()
 
@@ -71,13 +71,13 @@ def calcular_estatisticas(lim_inf_primeira, amplitude, qtd_classes, frequencias)
     estatisticas_resultados["Coeficiente de Variação (%)"] = float(cv) if not np.isnan(cv) else np.nan
     
     pos_mediana = N / 2.0
-    classe_mediana_idx_series = df[df['Frequência Acumulada (Fi)'] >= pos_mediana].index
+    classe_mediana_idx_series = df[df['Frequência Acumulada (Fac)'] >= pos_mediana].index
     
     if not classe_mediana_idx_series.empty:
         classe_mediana_idx = classe_mediana_idx_series[0]
         L_md = df.loc[classe_mediana_idx, 'Limite Inferior (LI)']
         f_md = df.loc[classe_mediana_idx, 'Frequência Absoluta (fi)']
-        Fi_ant_md = df.loc[classe_mediana_idx - 1, 'Frequência Acumulada (Fi)'] if classe_mediana_idx > 0 else 0.0
+        Fi_ant_md = df.loc[classe_mediana_idx - 1, 'Frequência Acumulada (Fac)'] if classe_mediana_idx > 0 else 0.0
         h = float(amplitude)
         mediana_calc = L_md + ((pos_mediana - Fi_ant_md) / f_md) * h if f_md != 0 else L_md
         estatisticas_resultados["Mediana"] = float(mediana_calc)
@@ -303,7 +303,7 @@ if st.sidebar.button("Calcular Estatísticas", type="primary", use_container_wid
                 # --- OGIVA DE FREQUÊNCIAS ACUMULADAS ---
                 st.markdown(f"<h4 style='text-align: center; color: {TEXT_COLOR_DARK_THEME}; font-family: sans-serif;'>Ogiva de Frequências Acumuladas</h4>", unsafe_allow_html=True)
                 x_ogiva = [float(df_resultados['Limite Inferior (LI)'].iloc[0])] + df_resultados['Limite Superior (LS)'].astype(float).tolist()
-                y_ogiva = [0.0] + df_resultados['Frequência Acumulada (Fi)'].astype(float).tolist()
+                y_ogiva = [0.0] + df_resultados['Frequência Acumulada (Fac)'].astype(float).tolist()
                 hover_texts_ogiva = [f"<b>Limite:</b> {x_ogiva[0]:.2f}<br><b>Freq. Acum.:</b> {int(y_ogiva[0])}"] + \
                                     [f"<b>Limite Sup.:</b> {x_ogiva[i]:.2f}<br><b>Freq. Acum.:</b> {int(y_ogiva[i])}" for i in range(1, len(x_ogiva))]
                 fig_ogiva = go.Figure(data=[go.Scatter(
