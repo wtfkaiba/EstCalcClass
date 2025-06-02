@@ -170,7 +170,7 @@ qtd_classes_opcoes = [3, 5, 7]
 qtd_classes = st.sidebar.selectbox("Quantidade de Classes:", options=qtd_classes_opcoes, index=1)
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("Frequências Absolutas (fi) de cada Classe:")
+st.sidebar.subheader("Frequências Individuais Absolutas (fi) de cada Classe:")
 
 # Ajustar default_frequencies com base no qtd_classes selecionado
 if qtd_classes == 5: default_frequencies = [10, 10, 10, 10, 10] 
